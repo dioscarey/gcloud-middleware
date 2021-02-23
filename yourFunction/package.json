@@ -1,0 +1,21 @@
+{
+  "name": "your-function",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha ./tests/*.test.js --exit",
+    "start": "npx @google-cloud/functions-framework --target=yourFunction --port=8800"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "path-match": "^1.2.4"
+  },
+  "devDependencies": {
+    "@google-cloud/functions-framework": "^1.3.2",
+    "mocha": "^8.3.0",
+    "sinon": "^9.2.4"
+  },
+  "private": true
+}
