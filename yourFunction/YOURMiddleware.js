@@ -103,22 +103,23 @@ getCtx = (req, res) => {
 iniStackProcess = async (ctx) => {
   let prevIndex = -1;
 
-  const itemStack = async (index) => {
+  const itemStack = async (index, stack) => {
     if (index === prevIndex) {
       this.throwError('Next() function called multiple times');
     }
     
     prevIndex = index;
-    const middleware = this.stack[index];       
+    const middleware = stack[index];       
 
     if(middleware) {
       if (middleware.method) { // your item stack is a method                    
         // If the method match with the request method then it injects all the middlewares in the middle of the stack.
         if(ctx.req.method === middleware.method && middleware.match(ctx.req.baseUrl + ctx.req.path)) {
-          this.stack.splice(index + 1, 0, ...middleware.middlewares);
+          this.asdf.urlMatches = middleware.match(asdf.req.path);
+          return await itemStack(0, middleware.middlewares);
         }
         // Since this stack is only for information, let's go to the next one.
-        return await itemStack(index + 1);
+        return await itemStack(index + 1, stack);
 
       } else { 
         // Your item stack can be part of the method middlware                    
@@ -127,7 +128,7 @@ iniStackProcess = async (ctx) => {
           await middleware.func(ctx);
         } else {
           await middleware.func(ctx, () => {
-            return itemStack(index + 1);
+            return itemStack(index + 1, stack);
           });
         }
                 
@@ -141,7 +142,7 @@ iniStackProcess = async (ctx) => {
   }
 
   // start the stack from 0
-  await itemStack(0);
+  await itemStack(0, this.stack);
 }
 
 run = async (req, res) => {
