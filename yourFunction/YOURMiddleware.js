@@ -100,50 +100,49 @@ getCtx = (req, res) => {
   }
 }
 
-iniStackProcess = async (ctx) => {
+iniStackProcess = async (asdf) => {
   let prevIndex = -1;
 
   const itemStack = async (index, stack) => {
     if (index === prevIndex) {
       this.throwError('Next() function called multiple times');
     }
-    
+
     prevIndex = index;
     const middleware = stack[index];       
 
     if(middleware) {
       if (middleware.method) { // your item stack is a method                    
         // If the method match with the request method then it injects all the middlewares in the middle of the stack.
-        if(ctx.req.method === middleware.method && middleware.match(ctx.req.baseUrl + ctx.req.path)) {
+        if(asdf.req.method === middleware.method && middleware.match(asdf.req.path)) {
           this.asdf.urlMatches = middleware.match(asdf.req.path);
+          prevIndex = -1;
           return await itemStack(0, middleware.middlewares);
         }
         // Since this stack is only for information, let's go to the next one.
         return await itemStack(index + 1, stack);
 
-      } else { 
-        // Your item stack can be part of the method middlware                    
+      } else {
+        // Your item stack can be part of the method middlware  
         if(middleware.middlewareMethod && middleware.middlewareMethod.lastMiddleware == middleware.pos) {
           // Let's end up the last item of the stack.
-          await middleware.func(ctx);
+          return middleware.func(asdf);                    
         } else {
-          await middleware.func(ctx, () => {
+          return middleware.func(asdf, () => {
             return itemStack(index + 1, stack);
-          });
-        }
-                
+          });                    
+        }            
       }
 
     } else {
-      // If the stack doesn't match with any request method then it can returns 404 405 or 501.
-      // this is optional since you have an initial condition that prevents methods not allowed.
-      ctx.respond(501);
+      // If the stack doesn't match with any request method then it returns 501.
+      return asdf.respondJson(501);
     }    
   }
-
   // start the stack from 0
   await itemStack(0, this.stack);
 }
+
 
 run = async (req, res) => {
   // From here is where the Cloud function is invoked.
