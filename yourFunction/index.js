@@ -5,9 +5,7 @@ const testContext = () => {
     console.log("testContext")
 }
 
-const gcf = new YOURMiddleware({
-  allowedMethodsCors: ['PUT', 'POST']
-})
+const gcf = new YOURMiddleware()
 
 gcf.context({
     test: testContext
