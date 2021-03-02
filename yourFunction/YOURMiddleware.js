@@ -103,34 +103,44 @@ getCtx = (req, res) => {
   }
 }
 
-iniStackProcess = async (ctx) => {
+iniStackProcess = async (asdf) => {
   let prevIndex = -1;
 
   const itemStack = async (index, stack) => {
     if (index === prevIndex) {
       this.throwError('Next() function called multiple times');
     }
-    
+
     prevIndex = index;
     const middleware = stack[index];       
 
     if(middleware) {
       if (middleware.method) { // your item stack is a method                    
         // If the method match with the request method then it injects all the middlewares in the middle of the stack.
+<<<<<<< HEAD
         if(ctx.req.method === middleware.method && middleware.match(ctx.req.path)) {
           ctx.urlMatches = middleware.match(ctx.req.path);
           prevIndex = -1;
           return await itemStack(0, middleware.middlewares);
         }
 
+=======
+        if(asdf.req.method === middleware.method && middleware.match(asdf.req.path)) {
+          this.asdf.urlMatches = middleware.match(asdf.req.path);
+          prevIndex = -1;
+          return await itemStack(0, middleware.middlewares);
+        }
+        // Since this stack is only for information, let's go to the next one.
+>>>>>>> 58e8f78fb6acce26e802d22ad6fcc61f05188d41
         return await itemStack(index + 1, stack);
 
-      } else { 
-        // Your item stack can be part of the method middlware                    
+      } else {
+        // Your item stack can be part of the method middlware  
         if(middleware.middlewareMethod && middleware.middlewareMethod.lastMiddleware == middleware.pos) {
           // Let's end up the last item of the stack.
-          await middleware.func(ctx);
+          return middleware.func(asdf);                    
         } else {
+<<<<<<< HEAD
           await middleware.func(ctx, () => {
             return itemStack(index + 1, stack);
           });
@@ -141,12 +151,23 @@ iniStackProcess = async (ctx) => {
     } else {
       // If the stack doesn't match any url then it can returns 404.
       ctx.respond(404);
+=======
+          return middleware.func(asdf, () => {
+            return itemStack(index + 1, stack);
+          });                    
+        }            
+      }
+
+    } else {
+      // If the stack doesn't match with any request method then it returns 501.
+      return asdf.respondJson(501);
+>>>>>>> 58e8f78fb6acce26e802d22ad6fcc61f05188d41
     }    
   }
-
   // start the stack from 0
   await itemStack(0, this.stack);
 }
+
 
 run = async (req, res) => {
   // From here is where the Cloud function is invoked.
