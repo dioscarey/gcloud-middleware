@@ -8,8 +8,8 @@ const route = require('path-match')({
 class YOURMiddleware {
 constructor(opts = {}) {
   this.stack = []; // Middleware stack
-  this.opts = {
-    allowedMethodsCors: [],
+  this.allowedMethodsCors = [];
+  this.opts = {    
     allowedOriginCors: ['*'],
     allowedHeadersCors: ['Content-Type'],
     ...opts
@@ -46,6 +46,9 @@ manageMethods = (method, url, middlewares) => {
       throw new Error('Middleware must be a function.');
     }
   }
+
+  if(this.allowedMethodsCors.findIndex(a => a === method) === -1)
+      this.allowedMethodsCors.push(method);
 
   this.stack.push({
     url,
@@ -103,22 +106,24 @@ getCtx = (req, res) => {
 iniStackProcess = async (ctx) => {
   let prevIndex = -1;
 
-  const itemStack = async (index) => {
+  const itemStack = async (index, stack) => {
     if (index === prevIndex) {
       this.throwError('Next() function called multiple times');
     }
     
     prevIndex = index;
-    const middleware = this.stack[index];       
+    const middleware = stack[index];       
 
     if(middleware) {
       if (middleware.method) { // your item stack is a method                    
         // If the method match with the request method then it injects all the middlewares in the middle of the stack.
-        if(ctx.req.method === middleware.method && middleware.match(ctx.req.baseUrl + ctx.req.path)) {
-          this.stack.splice(index + 1, 0, ...middleware.middlewares);
+        if(ctx.req.method === middleware.method && middleware.match(ctx.req.path)) {
+          ctx.urlMatches = middleware.match(ctx.req.path);
+          prevIndex = -1;
+          return await itemStack(0, middleware.middlewares);
         }
-        // Since this stack is only for information, let's go to the next one.
-        return await itemStack(index + 1);
+
+        return await itemStack(index + 1, stack);
 
       } else { 
         // Your item stack can be part of the method middlware                    
@@ -127,21 +132,20 @@ iniStackProcess = async (ctx) => {
           await middleware.func(ctx);
         } else {
           await middleware.func(ctx, () => {
-            return itemStack(index + 1);
+            return itemStack(index + 1, stack);
           });
         }
                 
       }
 
     } else {
-      // If the stack doesn't match with any request method then it can returns 404 405 or 501.
-      // this is optional since you have an initial condition that prevents methods not allowed.
-      ctx.respond(501);
+      // If the stack doesn't match any url then it can returns 404.
+      ctx.respond(404);
     }    
   }
 
   // start the stack from 0
-  await itemStack(0);
+  await itemStack(0, this.stack);
 }
 
 run = async (req, res) => {
@@ -157,14 +161,14 @@ run = async (req, res) => {
   ctx.res.set('Access-Control-Allow-Origin', this.opts.allowedOriginCors.join(', '));
 
   if (ctx.req.method === 'OPTIONS') {
-    ctx.res.set('Access-Control-Allow-Methods', this.opts.allowedMethodsCors.join(', '));
+    ctx.res.set('Access-Control-Allow-Methods', this.allowedMethodsCors.join(', '));
     ctx.res.set('Access-Control-Allow-Headers', this.opts.allowedHeadersCors.join(', '));      
     return ctx.respond(200);
   }
 
   // it helps to prevent the middleware execution.
-  if (this.opts.allowedMethodsCors.indexOf(ctx.req.method) === -1){
-    return ctx.respond(405);
+  if (this.allowedMethodsCors.indexOf(ctx.req.method) === -1){
+    return ctx.respond(501);
   }
 
   // Going forward, your middleware will be executed

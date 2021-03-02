@@ -24,5 +24,10 @@ const someMiddlewareHere = (ctx, next) => {
 };
 
 gcf.post('/', someMiddlewareHere, postFunction);
+gcf.get('/', someMiddlewareHere, (ctx) => ctx.respond(200));
+gcf.get('/test/:id', (ctx) => {
+    const {id} = ctx.urlMatches;
+    return ctx.respond(200, {id: id})
+});
 
 exports.yourFunction = gcf.run;
