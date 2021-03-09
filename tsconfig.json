@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "lib": ["es6", "es2015", "dom"],
+    "rootDir": "src",
+    "strict": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "importHelpers": true,
+    "removeComments": true,
+    "outDir": "dist",
+    "alwaysStrict": true
+  },
+  "include": ["./src/**/*"],
+  "exclude": [
+    "node_modules",
+    "dist",
+  ]
+}
