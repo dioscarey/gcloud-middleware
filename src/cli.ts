@@ -27,7 +27,7 @@ import {KeysNeeded} from './utils/common';
         const ver = spawnSync('npm', ['info', '@a3labs/contentful', 'version'], {
           encoding : 'utf8',
         });
-        console.log(ver.stdout)      
+        console.info(ver.stdout)      
       } 
     })
 
@@ -106,9 +106,7 @@ import {KeysNeeded} from './utils/common';
       process.exit();
     } else 
     if(program.args[0] === "merge") {
-
       KeysNeeded(opts);
-      console.info(opts);
 
       const compareEnv: ImportOptions = {
         envBase: opts['to'],
@@ -132,7 +130,6 @@ import {KeysNeeded} from './utils/common';
     if(program.args[0] === "diff") {
 
       KeysNeeded(opts);
-      console.info(opts);
       
       const compareEnv: ImportOptions = {
         envBase: opts['to'],
@@ -149,9 +146,7 @@ import {KeysNeeded} from './utils/common';
       
     }else
     if(program.args[0] === "newEnv" || program.args[0] === "new" || program.args[0] === "update") {
-
       KeysNeeded(opts);
-      console.info(opts);
 
       if(!opts['env'])
         throw new Error("[-e, --env] params needed!" )
@@ -163,7 +158,7 @@ import {KeysNeeded} from './utils/common';
       }
 
       const deacfm = new deleteEnvAndCopyFromMaster(deleteEnvOptions);
-      const deacfmResult = deacfm.askBeforeCreateCopy();
+      const deacfmResult = await deacfm.askBeforeCreateCopy();
       if(deacfmResult) {
         process.exit();
       }else {
@@ -174,7 +169,6 @@ import {KeysNeeded} from './utils/common';
     if(program.args[0] === "delete") {
 
       KeysNeeded(opts);
-      console.info(opts);
 
       if(opts['env'].toLowerCase() === "master") {
         throw new Error('You cannot delete Master enviorment')
@@ -195,11 +189,10 @@ import {KeysNeeded} from './utils/common';
       }
 
     } else {
-
       const h = spawnSync('cont', ['--help'], {
         encoding : 'utf8',
       }); 
-      console.log(h.stdout)      
+      console.info(h.stdout)      
 
       process.exit();
     }

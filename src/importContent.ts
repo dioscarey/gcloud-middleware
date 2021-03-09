@@ -10,7 +10,6 @@ import deleteEnvAndCopyFromMaster from './deleteEnvAndCopyForMaster';
 import compareTwoObjects from './utils/compareTwoObjects'
 import {ImportOptions, DeleteEnvOptions, ContentTypeModelStructure, ContentTypeFieldStructure, MigrationAction} from './interfaces'
 import {WriteJsonFile, ParseJsonFiles, RlCommand} from './utils/common';
-import { resolve } from 'path';
 
 const { runMigration } = require('contentful-migration')
 const contentfulImport = require('contentful-import');

@@ -1,12 +1,12 @@
 # Install
 
 `` 
-npm i -g @a3labs/contentful
+npm i -g contentful-migrate-content
 ``
 
 # @a3labs/contentful Package
 
-[https://github.com/A3labs/house-manager-tools/packages/272609](https://github.com/A3labs/house-manager-tools/packages/272609)
+[https://github.com/processway/contentful-migrate-content](https://github.com/processway/contentful-migrate-content)
 
 # Access
 

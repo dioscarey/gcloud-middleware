@@ -1,8 +1,5 @@
 'use strict';
 
-//* modules
-import {program} from 'commander';
-import {spawnSync} from 'child_process';
 //* dependencies
 import importContent from '../importContent';
 import deleteEnvAndCopyFromMaster from '../deleteEnvAndCopyForMaster';
