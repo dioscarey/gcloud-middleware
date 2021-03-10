@@ -6,11 +6,16 @@ import deleteEnvAndCopyFromMaster from '../deleteEnvAndCopyForMaster';
 import {ImportOptions, DeleteEnvOptions} from '../interfaces';
 import {KeysNeeded} from '../utils/common';
 
+const credentials: any = {};
+
+credentials['cmaToken'] = process.env.CONTENTFUL_CMS || null;
+credentials['spaceId'] = process.env.CONTENTFUL_SPACE_ID || null;
+console.log(credentials)
+
 test('Create new enviornment: testJest', async () => {
   const opts: any = {
-    cmaToken: '',
-    spaceId: '',
-    enviornmentBase: 'testJest'
+    enviornmentBase: 'testJest',
+    ...credentials
   }
 
   KeysNeeded(opts);
@@ -29,9 +34,8 @@ test('Create new enviornment: testJest', async () => {
 
 test('Create new enviornment: testJestTwo', async () => {
   const opts: any = {
-    cmaToken: '',
-    spaceId: '',
-    enviornmentBase: 'testJestTwo'
+    enviornmentBase: 'testJestTwo',
+    ...credentials
   }
 
   KeysNeeded(opts);
@@ -50,12 +54,11 @@ test('Create new enviornment: testJestTwo', async () => {
 
 test("Merge from testJestTwo to testJest", async () => {
   const opts: any = {
-    cmaToken: '',
-    spaceId: '',
     skipQuestions: true,
     forceUpdateContentTypesAndEntries: true,
     from: "testJestTwo",
-    to: "testJest"
+    to: "testJest",
+    ...credentials
   }
 
   const compareEnv: ImportOptions = {
@@ -79,18 +82,16 @@ test("Merge from testJestTwo to testJest", async () => {
 
 test('Delete enviornment: testJest', async () => {
   const opts: any = {
-    cmaToken: '',
-    spaceId: '',
     enviornmentBase: 'testJest',
-    skipQuestions: true
+    skipQuestions: true,
+    ...credentials
   }
 
   KeysNeeded(opts);
 
   const deleteEnvOptions: DeleteEnvOptions = {
     enviornmentBase: opts['enviornmentBase'],
-    spaceId: opts['spaceId'],
-    cmaToken: opts['cmaToken'],
+    ...credentials
   }
 
   const deacfm = new deleteEnvAndCopyFromMaster(deleteEnvOptions);
@@ -101,18 +102,16 @@ test('Delete enviornment: testJest', async () => {
 
 test('Delete enviornment: testJestTwo', async () => {
   const opts: any = {
-    cmaToken: '',
-    spaceId: '',
     enviornmentBase: 'testJestTwo',
-    skipQuestions: true
+    skipQuestions: true,
+    ...credentials
   }
 
   KeysNeeded(opts);
 
   const deleteEnvOptions: DeleteEnvOptions = {
     enviornmentBase: opts['enviornmentBase'],
-    spaceId: opts['spaceId'],
-    cmaToken: opts['cmaToken'],
+    ...credentials
   }
 
   const deacfm = new deleteEnvAndCopyFromMaster(deleteEnvOptions);
