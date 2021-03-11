@@ -4,9 +4,9 @@
 npm i -g contentful-migrate-content
 ``
 
-# @a3labs/contentful Package
-
-[https://github.com/processway/contentful-migrate-content](https://github.com/processway/contentful-migrate-content)
+``
+yarn global add contentful-migrate-content
+``
 
 # Access
 
@@ -40,7 +40,7 @@ cont new --env test --space-id <SPACE-ID> --cma-token <CMA-TOKEN>``
 **IMPORTANT!**
 Once you create a new enviorment you need to give access for the new branch in the Api Key settings (You need to be authorized to make this change).
 
-# How the merge works.
+# How the merge works?
 
 The content-cli was created by the Process Way team supported with  multiple Contentful cli's, you should try to fully understand how the process works.
 
@@ -68,7 +68,7 @@ We export all the changes (diffcontent.json) to the Master branch.
 
 After the new content is exported to Master, we synchronize all the changes made in Master to have the latest versions in Dev branch. 
 
-# a3labs Contentful CLI
+## Contentful CLI
 
 ### Usage
 
