@@ -4,10 +4,6 @@
 npm i -g contentful-migrate-content
 ``
 
-# @a3labs/contentful Package
-
-[https://github.com/processway/contentful-migrate-content](https://github.com/processway/contentful-migrate-content)
-
 # Access
 
 ``   
@@ -68,7 +64,7 @@ We export all the changes (diffcontent.json) to the Master branch.
 
 After the new content is exported to Master, we synchronize all the changes made in Master to have the latest versions in Dev branch. 
 
-# a3labs Contentful CLI
+# Contentful CLI
 
 ### Usage
 
