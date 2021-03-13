@@ -8,7 +8,9 @@ npm i -g contentful-migrate-content
 yarn global add contentful-migrate-content
 ``
 
-# Access
+# Credentials
+
+To get the CMS-TOKEN go to > Settings > Api Keys > Content management tokens 
 
 ``   
   echo "CONTENTFUL_CMS=<CMS-TOKEN>" >> ~/.bash_profile
@@ -16,7 +18,9 @@ yarn global add contentful-migrate-content
 `` 
   echo "CONTENTFUL_SPACE_ID=<SPACE-ID>" >> ~/.bash_profile
 `` 
+
 or
+
 ``   
   echo "CONTENTFUL_CMS=<CMS-TOKEN>" >> ~/.zshrc
 `` 
