@@ -53,35 +53,6 @@ cont new --env test --space-id <SPACE-ID> --cma-token <CMA-TOKEN>``
 **IMPORTANT!**
 Once you create a new enviorment you need to give access for the new branch in the Api Key settings (You need to be authorized to make this change).
 
-# How the merge works?
-
-The content-cli was created by the Process Way team supported with  multiple Contentful cli's, you should try to fully understand how the process works.
-
-The main file is called **importContent.ts**
-
-The process is as follows:
-
-## First step:
-
-We import all the Contentful content in a JSON file. Then, we will get two files, master.json and dev.json file.
-
-## Second step:
-
-We compare the content of the previous version (master.json) with the content of the new version (dev.json). If the new content version is ahead, we extract the entire JSON schema that contains all the new changes.
-
-## Third step:
-
-After having the schema of the new version, we create a new file called diffcontent.json, which it contains the new JSON schema with the most recent changes.
-
-## Fourth step:
-
-We export all the changes (diffcontent.json) to the Master branch.
-
-## Last step:
-
-After the new content is exported to Master, we synchronize all the changes made in Master to have the latest versions in Dev branch. 
-
-## Contentful CLI
 
 ### Usage
 
