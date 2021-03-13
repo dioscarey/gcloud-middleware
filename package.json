@@ -1,8 +1,8 @@
 {
-  "name": "contentful-migrate-content",
+  "name": "@processway/contentful-migrate-content",
   "version": "1.0.0",
   "description": "Contentful migration content",
-  "homepage": "https://github.com/aaa-ncnu/house-manager-tools#readme",
+  "homepage": "https://github.com/processway/contentful-migrate-content/blob/master/README.md",
   "author": "Oscar D. Rendón L. | Processway Technology",
   "license": "ISC",
   "bin": {
@@ -22,7 +22,6 @@
     "contentful-import": "^7.9.20",
     "contentful-management": "^7.9.0",
     "contentful-migration": "^4.0.9",
-    "path": "^0.12.7",
     "ts-jest": "^26.4.4",
     "tslib": "^2.0.0"
   },
@@ -40,10 +39,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/aaa-ncnu/house-manager-tools.git"
+    "url": "git+https://github.com/processway/contentful-migrate-content.git"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "registry": "https://registry.npmjs.org"
   },
   "jest": {
     "testTimeout": 30000,
@@ -69,5 +68,12 @@
       "text",
       "text-summary"
     ]
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/processway/contentful-migrate-content/issues"
+  },
+  "keywords": [
+    "contentful",
+    "contentful-migrate"
+  ]
 }
