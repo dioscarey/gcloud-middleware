@@ -15,6 +15,7 @@ To get the CMS-TOKEN go to > Settings > Api Keys > Content management tokens
 ``   
   echo "CONTENTFUL_CMS=<CMS-TOKEN>" >> ~/.bash_profile
 `` 
+
 `` 
   echo "CONTENTFUL_SPACE_ID=<SPACE-ID>" >> ~/.bash_profile
 `` 
@@ -24,6 +25,7 @@ or
 ``   
   echo "CONTENTFUL_CMS=<CMS-TOKEN>" >> ~/.zshrc
 `` 
+
 `` 
   echo "CONTENTFUL_SPACE_ID=<SPACE-ID>" >> ~/.zshrc
 `` 
