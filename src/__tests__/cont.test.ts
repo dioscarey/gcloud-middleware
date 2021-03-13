@@ -10,7 +10,6 @@ const credentials: any = {};
 
 credentials['cmaToken'] = process.env.CONTENTFUL_CMS || null;
 credentials['spaceId'] = process.env.CONTENTFUL_SPACE_ID || null;
-console.log(credentials)
 
 test('Create new enviornment: testJest', async () => {
   const opts: any = {

@@ -23,7 +23,6 @@ export default class deleteEnvAndCopyFromMaster {
   private skipQuestions: boolean
 
   constructor(options: DeleteEnvOptions) {
-    console.log(options);
     this.cmaToken = options.cmaToken
     this.spaceId = options.spaceId
     this.enviornmentBase = options.enviornmentBase;
