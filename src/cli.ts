@@ -27,7 +27,7 @@ import {KeysNeeded} from './utils/common';
         const ver = spawnSync('npm', ['info', '@a3labs/contentful', 'version'], {
           encoding : 'utf8',
         });
-        console.info(ver.stdout)      
+        console.log(ver.stdout)      
       } 
     })
 
@@ -38,6 +38,9 @@ import {KeysNeeded} from './utils/common';
     .requiredOption('-f, --from <env>', 'Environemnt Ex. -f dev')
     .requiredOption('-t, --to <env>', 'Environemnt Ex. -t master')
     .option('--space-id <id>', 'Contentful Space Id')
+    .option('--content-type-ids <ids>', 'Content Type Ids Ex. --content-type-ids contentType1,contentType2')
+    .option('--entries-ids <ids>', 'Entries Ids Ex. --entry-ids entry1,entry2')
+    .option('--ignore-entries', 'Skips processing of entries, use it to only update content type structure')
     .option('--cma-token <id>', 'Contentful CMA Token')  
     .option('--skip-questions', 'Skip any question')
     .option('--use-current-difference-content', 'Use contents already imported from Contentful')
@@ -53,6 +56,9 @@ import {KeysNeeded} from './utils/common';
     .requiredOption('-f, --from <env>', 'Environemnt Ex. -f dev')
     .requiredOption('-t, --to <env>', 'Environemnt Ex. -t master')
     .option('--space-id <id>', 'Contentful Space Id')
+    .option('--content-type-ids <ids>', 'Content Type Ids Ex. --content-type-ids contentType1,contentType2')
+    .option('--entries-ids <ids>', 'Entries Ids Ex. --entry-ids entry1,entry2')
+    .option('--ignore-entries', 'Skips processing of entries, use it to only update content type structure')
     .option('--cma-token <id>', 'Contentful CMA Token')
     .option('--use-current-difference-content', 'Use contents already imported from Contentful')
     .option('--force-update-content-types-and-entries', 'If you delete a content type or entry will be removed from --env-base branch')
@@ -106,18 +112,23 @@ import {KeysNeeded} from './utils/common';
       process.exit();
     } else 
     if(program.args[0] === "merge") {
+
       KeysNeeded(opts);
+      console.info(opts);
 
       const compareEnv: ImportOptions = {
         envBase: opts['to'],
         envCompare: opts['from'],
         spaceId: opts['spaceId'],
+        contentTypeIds: opts['contentTypeIds'],
+        entriesIds: opts['entriesIds'],
+        ignoreEntries: !!opts['ignoreEntries'],
         cmaToken: opts['cmaToken'],
         skipQuestions: !!opts['skipQuestions'],
         useCurrentDifferenceContent: !!opts['useCurrentDifferenceContent'],
         forceUpdateContentTypesAndEntries: !!opts['forceUpdateContentTypesAndEntries']
       }
-
+      
       const icft = new importContent(compareEnv);
       const icftResult = await icft.start();
       if(icftResult) {
@@ -128,13 +139,17 @@ import {KeysNeeded} from './utils/common';
       
     }else
     if(program.args[0] === "diff") {
-
+      
       KeysNeeded(opts);
+      console.info(opts);
       
       const compareEnv: ImportOptions = {
         envBase: opts['to'],
         envCompare: opts['from'],
         spaceId: opts['spaceId'],
+        contentTypeIds: opts['contentTypeIds'],
+        entriesIds: opts['entriesIds'],
+        ignoreEntries: !!opts['ignoreEntries'],
         cmaToken: opts['cmaToken'],
         onlyDiff: true,
         useCurrentDifferenceContent: !!opts['useCurrentDifferenceContent'],
@@ -146,7 +161,9 @@ import {KeysNeeded} from './utils/common';
       
     }else
     if(program.args[0] === "newEnv" || program.args[0] === "new" || program.args[0] === "update") {
+
       KeysNeeded(opts);
+      console.info(opts);
 
       if(!opts['env'])
         throw new Error("[-e, --env] params needed!" )
@@ -158,7 +175,7 @@ import {KeysNeeded} from './utils/common';
       }
 
       const deacfm = new deleteEnvAndCopyFromMaster(deleteEnvOptions);
-      const deacfmResult = await deacfm.askBeforeCreateCopy();
+      const deacfmResult = deacfm.askBeforeCreateCopy();
       if(deacfmResult) {
         process.exit();
       }else {
@@ -169,6 +186,7 @@ import {KeysNeeded} from './utils/common';
     if(program.args[0] === "delete") {
 
       KeysNeeded(opts);
+      console.info(opts);
 
       if(opts['env'].toLowerCase() === "master") {
         throw new Error('You cannot delete Master enviorment')
@@ -189,10 +207,11 @@ import {KeysNeeded} from './utils/common';
       }
 
     } else {
+
       const h = spawnSync('cont', ['--help'], {
         encoding : 'utf8',
       }); 
-      console.info(h.stdout)      
+      console.log(h.stdout)      
 
       process.exit();
     }

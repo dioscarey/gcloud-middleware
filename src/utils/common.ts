@@ -21,5 +21,14 @@ export function RlCommand(rl: any, question: string){
   })
 }
 
+export function parseOptionsList(ids: string): any {
+  try {
+    return ids.split(',');
+  } catch (e) {
+    console.error(e);
+    throw new Error("Invalid content type ids structure, expected  --content-type-ids=contentType1,contentType2")
+  }
+}
+
 
 
