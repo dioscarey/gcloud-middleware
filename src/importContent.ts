@@ -9,7 +9,8 @@ import {spawnSync} from "child_process";
 import deleteEnvAndCopyFromMaster from './deleteEnvAndCopyForMaster';
 import compareTwoObjects from './utils/compareTwoObjects'
 import {ImportOptions, DeleteEnvOptions, ContentTypeModelStructure, ContentTypeFieldStructure, MigrationAction} from './interfaces'
-import {WriteJsonFile, ParseJsonFiles, RlCommand} from './utils/common';
+import {WriteJsonFile, ParseJsonFiles, RlCommand, parseOptionsList} from './utils/common';
+import { resolve } from 'path';
 
 const { runMigration } = require('contentful-migration')
 const contentfulImport = require('contentful-import');
@@ -25,6 +26,11 @@ export default class importContentfulToMaster {
     private runMigration: boolean = false;
     private cmaToken: string
     private spaceId: string
+    private validTypes: Array<String> = []
+    private validIds: Array<String> = []
+    private contentTypeIds: Array<String> = []
+    private entriesIds: Array<String> = []
+    private ignoreEntries: boolean = false;
     private mergeOnlyDiff: boolean = false;
     private skipQuestions: boolean = false;
     private useCurrentDifferenceContent: boolean = false;
@@ -40,6 +46,9 @@ export default class importContentfulToMaster {
     constructor(options: ImportOptions) {
         this.cmaToken = options.cmaToken
         this.spaceId = options.spaceId;
+        this.contentTypeIds = options.contentTypeIds ? parseOptionsList(options.contentTypeIds) : [];
+        this.entriesIds = options.entriesIds ? parseOptionsList(options.entriesIds) : [];
+        this.ignoreEntries = !!options.ignoreEntries;
         this.mergeOnlyDiff = !!options.onlyDiff;
         this.skipQuestions = !!options.skipQuestions;
         this.useCurrentDifferenceContent = !!options.useCurrentDifferenceContent;
@@ -47,6 +56,15 @@ export default class importContentfulToMaster {
         this.envCompare = options.envCompare
         this.differenceContentPath = path.join(__dirname, '../', this.differenceContentFolderName);
         this.forceUpdateContentTypesAndEntries = !!options.forceUpdateContentTypesAndEntries
+        if (this.contentTypeIds.length > 0) {
+            this.validTypes.push('contentTypes')
+            !this.ignoreEntries && this.validTypes.push('entries')
+            this.validIds = this.validIds.concat(this.contentTypeIds);
+        }
+        if (this.entriesIds.length > 0) {
+            !this.contentTypeIds.length && this.validTypes.push('entries')
+            this.validIds = this.validIds.concat(this.entriesIds);
+        }
     }
 
     private importFilesFromContentful (base: string, filename: string) : void {
@@ -279,9 +297,11 @@ export default class importContentfulToMaster {
         let thereAreChanges: boolean = false;        
         
         const oldFile: any = ParseJsonFiles(path.join(this.differenceContentPath, this.envBase+'.json')); 
-        const newFile: any = ParseJsonFiles(path.join(this.differenceContentPath, this.envCompare+'.json'));                 
+        const newFile: any = ParseJsonFiles(path.join(this.differenceContentPath, this.envCompare+'.json'));             
         
         _.forEach(newFile, (value: string, type:string) => {
+            //validate type
+            if((type !== "webhooks" && type !== "roles") && (this.validTypes.length === 0 || this.validTypes.includes(type))) {
 
             console.info(`
 ------------------------------
@@ -294,8 +314,9 @@ export default class importContentfulToMaster {
 
             _.forEach(newFile[type], (newModel: ContentTypeModelStructure) => {
                 
-                if(newModel.sys?.id){
-                    
+                if(newModel.sys?.id && (!this.validIds.length || ((!this.entriesIds.length && !this.ignoreEntries) || this.validIds.includes(newModel.sys.id)))){
+                    console.info(newModel.sys?.id);
+
                     let result = type === "editorInterfaces"
                         ? oldFile[type].findIndex((o: {sys: any}) => o.sys.contentType?.sys?.id === newModel.sys?.contentType?.sys?.id )
                         : oldFile[type].findIndex((o: {sys: any}) => o.sys.id == newModel.sys?.id );
@@ -370,7 +391,8 @@ export default class importContentfulToMaster {
 
             if(this.totalEntitites[type] == 0) {
                 console.info("No changes");                
-            }                    
+            }             
+        }       
             
         });   
 

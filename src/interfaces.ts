@@ -4,6 +4,9 @@ export interface ImportOptions {
   envBase: string,
   envCompare: string,  
   spaceId: string,
+  contentTypeIds?: string,
+  entriesIds?: string,
+  ignoreEntries?: boolean
   cmaToken: string,
   onlyDiff?:boolean,
   skipQuestions?: boolean,
